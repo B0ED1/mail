@@ -26,10 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const replyToId = document.getElementById('replyToId');
 
   // Check if replying to an existing message
+  const replyBanner = document.getElementById('replyBanner');
   const urlParams = new URLSearchParams(window.location.search);
   const replyIdParam = urlParams.get('replyTo');
   if (replyIdParam) {
     checkAndSetupReply(replyIdParam);
+  } else if (replyBanner) {
+    replyBanner.style.display = 'none';
   }
 
   // Inbox Modal Elements
