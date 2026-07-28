@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melody Mail - Ada Pesan Spesial Untukmu</title>
+  
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Starry Background -->
+  <div class="stars-bg" id="starsBg"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+      <span>Melody Mail</span>
+    </a>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <div class="recipient-wrapper">
+      
+      <!-- Interactive Envelope Container -->
+      <div class="envelope-stage" id="envelopeStage">
+        <div class="envelope-3d" id="envelope3d">
+          <div class="envelope-flap"></div>
+          <div class="envelope-wax-seal" id="waxSeal">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <div class="envelope-label">
+            <span>ADA PESAN RAHASIA</span>
+            <h3 id="envelopeRecipientLabel">Untuk Seseorang</h3>
+          </div>
+        </div>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 14px;" id="envelopeHint">
+          <i class="fa-solid fa-hand-pointer"></i> Ketuk segel lilin untuk membuka pesan
+        </p>
+      </div>
+
+      <!-- Revealed Letter Card -->
+      <article class="letter-card" id="letterCard">
+        <!-- Optional Reply Banner if this message is a reply -->
+        <div id="parentReplyQuote" style="display: none; background: rgba(255, 101, 132, 0.1); border-left: 3px solid var(--primary-pink); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 0.88rem; color: var(--text-muted);">
+          <i class="fa-solid fa-reply"></i> Membalas pesan dari <strong id="parentSenderName" style="color: #fff;">-</strong>:
+          <span id="parentMessageSnippet" style="font-style: italic; display: block; margin-top: 4px;">"-"</span>
+        </div>
+
+        <header class="letter-header">
+          <div class="recipient-title" id="letterRecipient">Untuk Amanda</div>
+          <div class="sender-sub">Dari <strong id="letterSender" style="color: var(--primary-pink);">Dimas</strong></div>
+        </header>
+
+        <div class="letter-body" id="letterBody">
+          Loading pesan...
+        </div>
+
+        <!-- Vinyl Music Player Card -->
+        <div class="vinyl-player-card" id="vinylPlayerCard">
+          <div class="vinyl-disc-container">
+            <div class="vinyl-disc" id="vinylDisc">
+              <img id="vinylCoverArt" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&auto=format&fit=crop&q=80" class="vinyl-center-img" alt="Cover">
+            </div>
+          </div>
+          <div class="player-details">
+            <div class="player-song-title" id="playerSongTitle">Judul Lagu</div>
+            <div class="player-artist" id="playerArtistName">Nama Penyanyi</div>
+            <div class="audio-controls">
+              <button type="button" class="btn-play-pause" id="playPauseBtn">
+                <i class="fa-solid fa-play" id="playPauseIcon"></i>
+              </button>
+              <span style="font-size: 0.85rem; color: var(--text-muted);" id="audioStatusText">Klik untuk memutar lagu</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action buttons: Perfectly Aligned Reply & Create Own -->
+        <div class="create-own-cta" style="display: flex; gap: 14px; justify-content: center; align-items: center; flex-wrap: wrap;">
+          <button type="button" id="replyBtn" class="btn-action primary">
+            <i class="fa-solid fa-reply"></i> Balas Pesan Ini 💌
+          </button>
+          <a href="/" class="btn-action secondary">
+            <i class="fa-solid fa-pen-to-square"></i> Buat Pesan Baru
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- Audio Element -->
+  <audio id="recipientAudioPlayer" preload="auto"></audio>
+
+  <script src="/js/read.js"></script>
+</body>
+</html>

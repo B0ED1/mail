@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melody Mail - Kirim Pesan & Musik Personal</title>
+  <meta name="description" content="Platform web interaktif untuk mengirim pesan personal lengkap dengan lagu favorit untuk orang tersayang.">
+  
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Starry Background Canvas -->
+  <div class="stars-bg" id="starsBg"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+      <span>Melody Mail</span>
+    </a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button type="button" class="btn-secondary" id="openInboxBtn" style="padding: 8px 16px; font-size: 0.88rem; border-radius: 20px;">
+        <i class="fa-solid fa-inbox"></i> Cari Pesan Saya
+      </button>
+      <div class="tagline-badge">
+        <i class="fa-solid fa-music"></i> Instant Song Embed
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="hero-header">
+      <h1>Kirim Pesan & Lagu Favoritmu</h1>
+      <p>Sampaikan perasaanmu lewat kata-kata dan alunan melodi manis. Terbang bersama merpati pos spesial!</p>
+    </div>
+
+    <!-- Message Creation Card -->
+    <div class="glass-card">
+      <!-- Reply Banner (Shown when user clicks Balas Pesan) -->
+      <div id="replyBanner" style="display: none; background: rgba(255, 101, 132, 0.15); border: 1px solid rgba(255, 101, 132, 0.3); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 20px; color: var(--primary-pink); font-size: 0.95rem; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <i class="fa-solid fa-reply"></i> Membalas pesan dari <strong id="replyBannerSender" style="color: #fff;">-</strong>
+        </div>
+        <a href="/" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;"><i class="fa-solid fa-xmark"></i> Batal</a>
+      </div>
+
+      <form id="melodyForm">
+        <input type="hidden" id="replyToId">
+        <div class="form-grid">
+          <!-- Recipient Name -->
+          <div class="form-group">
+            <label for="recipientInput"><i class="fa-solid fa-heart"></i> Untuk (Nama Penerima)</label>
+            <input type="text" id="recipientInput" class="input-control" placeholder="Contoh: Amanda" required>
+          </div>
+
+          <!-- Sender Name -->
+          <div class="form-group">
+            <label for="senderInput"><i class="fa-solid fa-user"></i> Dari (Nama Pengirim)</label>
+            <input type="text" id="senderInput" class="input-control" placeholder="Contoh: Dimas" required>
+          </div>
+
+          <!-- Personal Message Textarea -->
+          <div class="form-group full-width">
+            <label for="messageInput"><i class="fa-solid fa-pen-nib"></i> Isi Pesan Personal</label>
+            <textarea id="messageInput" class="textarea-control" placeholder="Tuliskan pesan berkesanmu di sini..." maxlength="1000" required></textarea>
+            <div class="char-counter"><span id="charCount">0</span>/1000 karakter</div>
+          </div>
+
+          <!-- Song Search Integration -->
+          <div class="form-group full-width">
+            <label for="songSearchInput"><i class="fa-solid fa-compact-disc"></i> Cari & Menyematkan Lagu</label>
+            <div class="song-search-wrapper">
+              <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="songSearchInput" class="input-control" placeholder="Ketik judul lagu atau nama penyanyi... (e.g. Perfect Ed Sheeran)" autocomplete="off">
+              </div>
+              
+              <!-- Search Results Dropdown -->
+              <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+            </div>
+
+            <!-- Selected Song Card Display -->
+            <div class="selected-song-card" id="selectedSongCard" style="display: none;">
+              <div class="selected-song-info">
+                <img id="selectedArt" src="" alt="Album Art">
+                <div>
+                  <div id="selectedTitle" class="song-title">Judul Lagu</div>
+                  <div id="selectedArtist" class="song-artist">Nama Artis</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button type="button" class="audio-preview-btn" id="previewAudioBtn" title="Dengarkan Cuplikan">
+                  <i class="fa-solid fa-play" id="previewAudioIcon"></i>
+                </button>
+                <button type="button" class="remove-song-btn" id="removeSongBtn" title="Hapus Lagu">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden inputs for song metadata -->
+        <input type="hidden" id="selectedSongTitle">
+        <input type="hidden" id="selectedArtistName">
+        <input type="hidden" id="selectedAlbumArt">
+        <input type="hidden" id="selectedPreviewUrl">
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Melody Mail
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Audio Element for Song Previews -->
+  <audio id="globalAudioPlayer" preload="none"></audio>
+
+  <!-- Fullscreen Delivery Animation Overlay -->
+  <div class="delivery-overlay" id="deliveryOverlay">
+    <div class="sky-stage">
+      <div class="pigeon-container">
+        <!-- Stylized Flying Pigeon SVG -->
+        <svg class="pigeon-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 50 C30 30, 60 20, 80 40 C75 55, 60 65, 45 60 C35 70, 20 65, 20 50 Z" fill="#ffffff" />
+          <path d="M45 40 C60 15, 80 25, 70 45 Z" fill="#ffccd5" opacity="0.9" />
+          <circle cx="70" cy="38" r="3" fill="#111111" />
+          <polygon points="78,38 88,42 78,45" fill="#f7d070" />
+        </svg>
+        <div class="held-envelope">
+          <div class="seal"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="delivery-status-text" id="deliveryStatus">
+      <h2>Menerbangkan Pesan...</h2>
+      <p>Merpati pos sedang menyampaikan Melody Mail milikmu ke awan.</p>
+    </div>
+
+    <!-- Success Link Generator Modal -->
+    <div class="success-modal" id="successModal">
+      <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h2 style="font-size: 1.8rem; color: #fff; margin-bottom: 8px;">Pesan Berhasil Terkirim!</h2>
+      <p style="color: var(--text-muted);">Bagikan tautan unik ini kepada penerima agar mereka dapat membuka amplop dan mendengarkan lagumu.</p>
+      
+      <div class="share-link-box">
+        <input type="text" id="shareLinkInput" class="share-link-input" readonly>
+        <button type="button" class="btn-copy" id="copyLinkBtn">
+          <i class="fa-solid fa-copy"></i> Salin
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <a id="previewLinkBtn" href="#" class="btn-secondary" target="_blank">
+          <i class="fa-solid fa-eye"></i> Lihat Halaman
+        </a>
+        <button type="button" class="btn-secondary" id="createAnotherBtn">
+          <i class="fa-solid fa-plus"></i> Buat Pesan Baru
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Inbox Modal Overlay -->
+  <div class="delivery-overlay" id="inboxModal">
+    <div class="success-modal active" style="max-width: 580px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+        <h2 style="font-size: 1.5rem; color: var(--primary-pink);"><i class="fa-solid fa-inbox"></i> Cari Pesan Untukmu</h2>
+        <button type="button" id="closeInboxBtn" style="background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.95rem; text-align: left; margin-bottom: 16px;">Ketik namamu di bawah untuk memeriksa apakah ada seseorang yang mengirimkan Melody Mail untukmu!</p>
+
+      <div class="search-input-wrapper" style="margin-bottom: 20px;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="inboxSearchInput" class="input-control" placeholder="Ketik namamu... (e.g. Amanda)" style="padding-left: 46px;">
+      </div>
+
+      <!-- Inbox Search Results Container -->
+      <div id="inboxResultsList" style="max-height: 280px; overflow-y: auto; text-align: left; display: flex; flex-direction: column; gap: 10px;">
+        <div style="text-align: center; color: var(--text-muted); padding: 20px;">Ketik namamu di atas untuk mencari pesan.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

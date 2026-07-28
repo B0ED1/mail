@@ -1,0 +1,64 @@
+[
+  {
+    "id": "5c6e162f",
+    "sender": "Dimas",
+    "recipient": "Amanda",
+    "message": "Kamu adalah melodi terindah dalam hidupku.",
+    "songTitle": "Yellow",
+    "artistName": "Coldplay",
+    "albumArt": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ce/74/59/ce745963-3171-8bc6-eb52-fa5d8f07b1a1/0825646142750.jpg/300x300bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/80/f7/60/80f76081-ceeb-06e1-bf2b-c8cbb42bfb54/mzaf_16239103986060195507.plus.aac.p.m4a",
+    "platform": "itunes",
+    "createdAt": "2026-07-28T18:54:11.840Z"
+  },
+  {
+    "id": "7115f04a",
+    "sender": "Dimas",
+    "recipient": "Amanda",
+    "message": "Kamu adalah melodi terindah dalam hidupku. Terima kasih telah selalu ada.",
+    "songTitle": "Unknown Title",
+    "artistName": "Unknown Artist",
+    "albumArt": "",
+    "previewUrl": "",
+    "platform": "itunes",
+    "createdAt": "2026-07-28T18:55:25.667Z"
+  },
+  {
+    "id": "0131963e",
+    "sender": "Dimas",
+    "recipient": "Amanda",
+    "message": "Kamu adalah melodi terindah dalam hidupku. Terima kasih telah selalu ada.",
+    "songTitle": "Perfect",
+    "artistName": "Ed Sheeran",
+    "albumArt": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/15/e6/e8/15e6e8a4-4190-6a8b-86c3-ab4a51b88288/190295851286.jpg/300x300bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/ba/bc/c7babc66-f598-aaa6-bcf6-307281795817/mzaf_16337361235117168274.plus.aac.p.m4a",
+    "platform": "itunes",
+    "createdAt": "2026-07-28T18:56:34.392Z"
+  },
+  {
+    "id": "49a75685",
+    "replyToId": "5c6e162f",
+    "sender": "Amanda",
+    "recipient": "Dimas",
+    "message": "Makasih banget lagunya manis banget!",
+    "songTitle": "Lover",
+    "artistName": "Taylor Swift",
+    "albumArt": "",
+    "previewUrl": "",
+    "platform": "itunes",
+    "createdAt": "2026-07-28T18:59:35.292Z"
+  },
+  {
+    "id": "d8daa2cc",
+    "replyToId": null,
+    "sender": "A",
+    "recipient": "Elle",
+    "message": "hi, how is life kak? hope you all are doing well, maaf kalau aku lagi-lagi ganggu waktu kamu, tapi i just wanna say that i miss you, i miss you so bad. Aku tau kalau kita jadi kaya gini karena aku, karena aku yang gajelas, aku yang masih bocah, tapi kak, i love you sejak kita komunikasi lagi, aku seneng banget waktu itu karena kita bisa ngobrol, main, seru-seruan, tapi bukannya memperbaiki hal itu aku malah ngerusak buat yang kedua kalinya, i hope you have a great great life kak, hope you always happy, cause your smile is beautiful. love you\nA",
+    "songTitle": "Merry Christmas, i miss you",
+    "artistName": "Alex Crichton",
+    "albumArt": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/db/68/80/db6880fb-9032-b17a-d082-6f00620c50c4/3b72e539-6ee5-430b-bea2-4e1c9cddd475.jpg/300x300bb.jpg",
+    "previewUrl": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/10/81/2a/10812ae6-19c6-9e0d-6daa-01536638d123/mzaf_13448019751749227987.plus.aac.p.m4a",
+    "platform": "itunes",
+    "createdAt": "2026-07-28T19:10:10.124Z"
+  }
+]
