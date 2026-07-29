@@ -11,6 +11,26 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
+ * Helper to encode message payload into base64url for zero-dependency URL fallback
+ */
+function encodePayload(message) {
+  try {
+    const payload = {
+      s: message.sender,
+      r: message.recipient,
+      m: message.message,
+      st: message.songTitle,
+      an: message.artistName,
+      aa: message.albumArt,
+      pu: message.previewUrl
+    };
+    return Buffer.from(JSON.stringify(payload)).toString('base64url');
+  } catch (err) {
+    return '';
+  }
+}
+
+/**
  * Endpoint: Search Songs via iTunes API
  */
 app.get('/api/search', async (req, res) => {
@@ -67,7 +87,8 @@ app.post('/api/messages', async (req, res) => {
 
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.get('host');
-    const shareUrl = `${protocol}://${host}/m/${savedMessage.id}`;
+    const encoded = encodePayload(savedMessage);
+    const shareUrl = `${protocol}://${host}/m/${savedMessage.id}#d=${encoded}`;
 
     return res.status(201).json({
       success: true,

@@ -46,13 +46,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     const res = await fetch(`/api/messages/${encodeURIComponent(messageId)}`);
     const result = await res.json();
 
-    if (!res.ok || !result.success) {
-      envelopeRecipientLabel.textContent = 'Pesan Tidak Ditemukan';
-      envelopeHint.textContent = 'Maaf, tautan pesan ini tidak valid atau telah kedaluwarsa.';
-      return;
+    if (res.ok && result.success && result.data) {
+      messageData = result.data;
     }
+  } catch (err) {
+    console.warn('Backend fetch failed, attempting URL payload fallback:', err);
+  }
 
-    messageData = result.data;
+  // Fallback: Decode payload directly from URL hash or query param if backend didn't return data
+  if (!messageData) {
+    try {
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const urlParams = new URLSearchParams(window.location.search);
+      const encoded = hashParams.get('d') || urlParams.get('d');
+      if (encoded) {
+        const decodedStr = decodeURIComponent(escape(atob(encoded.replace(/-/g, '+').replace(/_/g, '/'))));
+        const p = JSON.parse(decodedStr);
+        messageData = {
+          id: messageId,
+          sender: p.s || 'Seseorang',
+          recipient: p.r || 'Seseorang',
+          message: p.m || '',
+          songTitle: p.st || '',
+          artistName: p.an || '',
+          albumArt: p.aa || '',
+          previewUrl: p.pu || '',
+          platform: 'itunes'
+        };
+      }
+    } catch (e) {
+      console.error('Failed to parse URL payload:', e);
+    }
+  }
+
+  if (!messageData) {
+    envelopeRecipientLabel.textContent = 'Pesan Tidak Ditemukan';
+    envelopeHint.textContent = 'Maaf, tautan pesan ini tidak valid atau telah kedaluwarsa.';
+    return;
+  }
 
     // Populate envelope label
     envelopeRecipientLabel.textContent = messageData.recipient || 'Seseorang';
