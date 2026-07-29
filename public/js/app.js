@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     openInboxBtn.addEventListener('click', () => {
       inboxModal.classList.add('active');
       inboxSearchInput.focus();
+      if (!inboxSearchInput.value.trim()) {
+        renderLocalHistory();
+      }
     });
 
     closeInboxBtn.addEventListener('click', () => {
@@ -58,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(inboxDebounce);
 
       if (name.length < 2) {
-        inboxResultsList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Ketik namamu di atas untuk mencari pesan.</div>';
+        renderLocalHistory();
         return;
       }
 
@@ -76,10 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
           inboxResultsList.innerHTML = '';
           data.results.forEach(msg => {
             const card = document.createElement('div');
-            card.style.cssText = 'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;';
+            card.style.cssText = 'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;';
             card.innerHTML = `
               <div>
-                <div style="font-weight: 600; color: #fff; font-size: 0.95rem;">Dari: ${escapeHtml(msg.sender)}</div>
+                <div style="font-weight: 600; color: #fff; font-size: 0.95rem;">Dari: ${escapeHtml(msg.sender)} (Untuk: ${escapeHtml(msg.recipient)})</div>
                 <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">🎵 ${escapeHtml(msg.songTitle || 'Tanpa lagu')}</div>
               </div>
               <a href="/m/${msg.id}" class="btn-submit" style="padding: 8px 14px; font-size: 0.85rem; text-decoration: none; width: auto;">
@@ -93,6 +96,51 @@ document.addEventListener('DOMContentLoaded', () => {
           inboxResultsList.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">Gagal memuat pesan.</div>';
         }
       }, 350);
+    });
+  }
+
+  function getLocalHistory() {
+    try {
+      return JSON.parse(localStorage.getItem('melody_mail_history') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveLocalHistory(item) {
+    try {
+      const history = getLocalHistory();
+      const filtered = history.filter(h => h.id !== item.id);
+      filtered.unshift(item);
+      localStorage.setItem('melody_mail_history', JSON.stringify(filtered.slice(0, 20)));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function renderLocalHistory() {
+    const history = getLocalHistory();
+    if (!history || history.length === 0) {
+      inboxResultsList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px;">Ketik namamu di atas untuk mencari pesan.</div>';
+      return;
+    }
+
+    inboxResultsList.innerHTML = '<div style="font-size: 0.85rem; color: var(--primary-pink); font-weight: 600; margin-bottom: 12px;"><i class="fa-solid fa-clock-rotate-left"></i> Pesan Terakhir yang Pernah Kamu Buat:</div>';
+    
+    history.forEach(msg => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px;';
+      const openUrl = msg.shareUrl || `/m/${msg.id}`;
+      card.innerHTML = `
+        <div style="overflow: hidden; text-overflow: ellipsis;">
+          <div style="font-weight: 600; color: #fff; font-size: 0.92rem;">Untuk: ${escapeHtml(msg.recipient)} <span style="font-weight:400; font-size:0.8rem; color:var(--text-muted);">(Dari: ${escapeHtml(msg.sender)})</span></div>
+          <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px;">🎵 ${escapeHtml(msg.songTitle || 'Tanpa lagu')}</div>
+        </div>
+        <a href="${escapeHtml(openUrl)}" class="btn-submit" style="padding: 8px 14px; font-size: 0.85rem; text-decoration: none; width: auto; white-space: nowrap;">
+          <i class="fa-solid fa-envelope-open"></i> Buka
+        </a>
+      `;
+      inboxResultsList.appendChild(card);
     });
   }
 
@@ -271,6 +319,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!res.ok || !data.success) {
         throw new Error(data.error || 'Gagal menyimpan pesan');
       }
+
+      // Save to local browser history
+      saveLocalHistory({
+        id: data.data.id,
+        sender,
+        recipient,
+        songTitle: selectedSongTitle.value,
+        shareUrl: data.shareUrl,
+        createdAt: new Date().toISOString()
+      });
 
       // Wait for carrier pigeon flight animation (3.5 seconds)
       setTimeout(() => {
