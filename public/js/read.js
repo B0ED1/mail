@@ -85,57 +85,50 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-    // Populate envelope label
-    envelopeRecipientLabel.textContent = messageData.recipient || 'Seseorang';
-    document.title = `Melody Mail - Pesan untuk ${messageData.recipient || 'Kamu'}`;
+  // Populate envelope label
+  envelopeRecipientLabel.textContent = messageData.recipient || 'Seseorang';
+  document.title = `Melody Mail - Pesan untuk ${messageData.recipient || 'Kamu'}`;
 
-    // Pre-fill letter contents
-    letterRecipient.textContent = `Untuk: ${messageData.recipient}`;
-    letterSender.textContent = messageData.sender;
+  // Pre-fill letter contents
+  letterRecipient.textContent = `Untuk: ${messageData.recipient}`;
+  letterSender.textContent = messageData.sender;
 
-    // Handle parent message quote if this is a reply
-    if (messageData.replyToMessage) {
-      const parentReplyQuote = document.getElementById('parentReplyQuote');
-      const parentSenderName = document.getElementById('parentSenderName');
-      const parentMessageSnippet = document.getElementById('parentMessageSnippet');
+  // Handle parent message quote if this is a reply
+  if (messageData.replyToMessage) {
+    const parentReplyQuote = document.getElementById('parentReplyQuote');
+    const parentSenderName = document.getElementById('parentSenderName');
+    const parentMessageSnippet = document.getElementById('parentMessageSnippet');
 
-      if (parentReplyQuote && parentSenderName && parentMessageSnippet) {
-        parentSenderName.textContent = messageData.replyToMessage.sender;
-        parentMessageSnippet.textContent = `"${messageData.replyToMessage.messageSnippet}"`;
-        parentReplyQuote.style.display = 'block';
-      }
+    if (parentReplyQuote && parentSenderName && parentMessageSnippet) {
+      parentSenderName.textContent = messageData.replyToMessage.sender;
+      parentMessageSnippet.textContent = `"${messageData.replyToMessage.messageSnippet}"`;
+      parentReplyQuote.style.display = 'block';
     }
+  }
 
-    // Setup Reply button navigation
-    const replyBtn = document.getElementById('replyBtn');
-    if (replyBtn) {
-      replyBtn.addEventListener('click', () => {
-        window.location.href = `/?replyTo=${messageData.id}`;
-      });
+  // Setup Reply button navigation
+  const replyBtn = document.getElementById('replyBtn');
+  if (replyBtn) {
+    replyBtn.addEventListener('click', () => {
+      window.location.href = `/?replyTo=${messageData.id}`;
+    });
+  }
+
+  // Music card setup
+  if (messageData.songTitle) {
+    playerSongTitle.textContent = messageData.songTitle;
+    playerArtistName.textContent = messageData.artistName || 'Penyanyi Spesial';
+    if (messageData.albumArt) {
+      vinylCoverArt.src = messageData.albumArt;
     }
-
-    // Music card setup
-    if (messageData.songTitle) {
-      playerSongTitle.textContent = messageData.songTitle;
-      playerArtistName.textContent = messageData.artistName || 'Penyanyi Spesial';
-      if (messageData.albumArt) {
-        vinylCoverArt.src = messageData.albumArt;
-      }
-      if (messageData.previewUrl) {
-        recipientAudioPlayer.src = messageData.previewUrl;
-      } else {
-        audioStatusText.textContent = 'Lagu tidak memiliki pratinjau audio';
-        playPauseBtn.style.opacity = '0.5';
-      }
+    if (messageData.previewUrl) {
+      recipientAudioPlayer.src = messageData.previewUrl;
     } else {
-      vinylPlayerCard.style.display = 'none';
+      audioStatusText.textContent = 'Lagu tidak memiliki pratinjau audio';
+      playPauseBtn.style.opacity = '0.5';
     }
-
-  } catch (err) {
-    console.error('Failed to load message:', err);
-    envelopeRecipientLabel.textContent = 'Terjadi Kesalahan';
-    envelopeHint.textContent = 'Gagal menghubungkan ke server.';
-    return;
+  } else {
+    vinylPlayerCard.style.display = 'none';
   }
 
   // Interactive Envelope Open Handler
